@@ -7,7 +7,7 @@ module Properties
 
     attr_reader :data
 
-    SORT_OPTIONS = ['price', 'beds', 'baths', 'created_at']
+    SORT_OPTIONS = ['price', 'beds', 'baths', 'created_at', 'upvote', 'netscore']
 
     # GET /index
     def index
@@ -123,6 +123,8 @@ module Properties
     def sort_property(key:)
       if key.upcase == 'CREATED_AT'
         data.sort! { |first, second| Date.parse(second[key]) <=> Date.parse(first[key]) }
+      elsif key == 'netscore'
+        data.sort! { |first, second| (second['UPVOTE'].to_f + second['DOWNVOTE'].to_f)  <=> (first['UPVOTE'].to_f + first['DOWNVOTE'].to_f) }
       else
         data.sort! { |first, second| second[key.upcase].to_f <=> first[key.upcase].to_f }
       end

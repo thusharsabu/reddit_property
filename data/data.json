@@ -2205,7 +2205,7 @@
     "INTERESTED": "Y",
     "LATITUDE": "37.7438469",
     "LONGITUDE": "-122.4215433",
-    "UPVOTE": 0,
+    "UPVOTE": 10,
     "DOWNVOTE": 0,
     "CREATED_AT": "2021-07-07 06:11:45 -0500",
     "ID": 67
@@ -2271,8 +2271,8 @@
     "INTERESTED": "Y",
     "LATITUDE": "37.7744337",
     "LONGITUDE": "-122.4542758",
-    "UPVOTE": 0,
-    "DOWNVOTE": 0,
+    "UPVOTE": 10,
+    "DOWNVOTE": -2,
     "CREATED_AT": "2021-07-07 06:11:45 -0500",
     "ID": 69
   },

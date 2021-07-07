@@ -13,6 +13,9 @@ GET
   - localhost:3000/properties/index?sort_by=price
   - localhost:3000/properties/index?sort_by=beds
   - localhost:3000/properties/index?sort_by=baths
+  - localhost:3000/properties/index?sort_by=upvote
+  - localhost:3000/properties/index?sort_by=netscore
+  - localhost:3000/properties/index?sort_by=downvote //asc order
 
 GET
 - /show - Returns single property

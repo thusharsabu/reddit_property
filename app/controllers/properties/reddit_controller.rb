@@ -7,7 +7,8 @@ module Properties
 
     attr_reader :data
 
-    SORT_OPTIONS = ['price', 'beds', 'baths', 'created_at', 'upvote', 'netscore']
+    SORT_OPTIONS = ['price', 'beds', 'baths', 'created_at', 'upvote', 'downvote', 'netscore']
+    METADATA = ['SALE TYPE', 'PRICE', 'BEDS', 'BATHS', 'UPVOTE', 'DOWNVOTE', 'CREATED_AT']
 
     # GET /index
     def index
@@ -22,7 +23,7 @@ module Properties
       sort_property(key: sort_by_key)
 
       data.each do |each_data|
-        response << each_data.slice('SALE TYPE', 'PRICE', 'BEDS', 'BATHS', 'UPVOTE', 'DOWNVOTE', 'CREATED_AT')
+        response << each_data.slice(*METADATA)
       end
 
       render json: response
@@ -60,31 +61,28 @@ module Properties
 
     # POST /upvote
     def upvote
-      relevant_data = find_data(id: vote_params['id'].to_i)
-
-      if relevant_data.blank?
-        render json: '{"error": "not_found"}', status: :not_found
-      else
-        relevant_data['UPVOTE'] = relevant_data['UPVOTE'].to_i + vote_params['vote']
-
-        Reddit::PropertyManager.write_data(data: data)
-  
-        head :ok
+      update_vote do |relevant_data|
+        relevant_data['UPVOTE'] = relevant_data['UPVOTE'].to_i - vote_params['vote']
       end
-    rescue StandardError => e
-      Rails.logger.error message: 'Failed to Populate Property data', exception: e
-
-      render json: { error: e.message }, status: 500
     end
   
     # POST /downvote
     def downvote
+      update_vote do |relevant_data|
+        relevant_data['DOWNVOTE'] = relevant_data['DOWNVOTE'].to_i - vote_params['vote']
+      end
+    end
+
+    private
+
+    # Private: Update Upvote/Downvote
+    def update_vote
       relevant_data = find_data(id: vote_params['id'].to_i)
 
       if relevant_data.blank?
         render json: '{"error": "not_found"}', status: :not_found
       else
-        relevant_data['DOWNVOTE'] = relevant_data['DOWNVOTE'].to_i - vote_params['vote']
+        yield(relevant_data)
 
         Reddit::PropertyManager.write_data(data: data)
   
@@ -95,8 +93,6 @@ module Properties
 
       render json: { error: e.message }, status: 500
     end
-
-    private
 
     # Private: Search Property with id
     # 

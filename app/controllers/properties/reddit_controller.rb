@@ -62,7 +62,7 @@ module Properties
     # POST /upvote
     def upvote
       update_vote do |relevant_data|
-        relevant_data['UPVOTE'] = relevant_data['UPVOTE'].to_i - vote_params['vote']
+        relevant_data['UPVOTE'] = relevant_data['UPVOTE'].to_i + vote_params['vote']
       end
     end
   
